@@ -1,71 +1,103 @@
 package pharmacy;
 
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class PharmacyInventory {
-	 private ArrayList<Medicine> medicines = new ArrayList<>();
+    private ArrayList<Medicine> medicines;
 
-	    // Add new medicine
-	    public void addMedicine(Medicine m) {
-	        medicines.add(m);
-	        System.out.println("Medicine added successfully!");
-	    }
+    public PharmacyInventory() {
+        medicines = new ArrayList<>();
+    }
 
-	    // View all medicines
-	    public void viewStock() {
-	        if (medicines.isEmpty()) {
-	            System.out.println("No medicines in stock.");
-	        } else {
-	            double grandTotal = 0;
-	            System.out.println("\n--- Current Stock ---");
-	            for (Medicine m : medicines) {
-	                System.out.println(m);
-	                grandTotal += m.getTotalValue();
-	            }
-	            System.out.println("-------------------------------");
-	            System.out.println("Total Stock Value: GHS " + String.format("%.2f", grandTotal));
-	        }
-	    }
+    // ✅ Add new medicine
+    public void addMedicine(Medicine medicine) {
+        medicines.add(medicine);
+    }
 
-	    // Update quantity
-	    public void updateMedicine(int id, int newQty) {
-	        for (Medicine m : medicines) {
-	            if (m.getId() == id) {
-	                m.setQuantity(newQty);
-	                System.out.println("Quantity updated successfully!");
-	                return;
-	            }
-	        }
-	        System.out.println("Medicine not found!");
-	    }
+    // ✅ Get all medicines (for JTable in GUI)
+    public ArrayList<Medicine> getAllMedicines() {
+        return medicines;
+    }
 
-	    // Delete medicine
-	    public void deleteMedicine(int id) {
-	        medicines.removeIf(m -> m.getId() == id);
-	        System.out.println("Medicine deleted successfully!");
-	    }
+    // ✅ Search for a medicine by ID
+    public Medicine searchMedicine(int id) {
+        for (Medicine med : medicines) {
+            if (med.getId() == id) {
+                return med;
+            }
+        }
+        return null;
+    }
 
-	    // Generate low-stock report
-	    public void generateReport() {
-	        System.out.println("Low Stock Medicines (less than 5):");
-	        for (Medicine m : medicines) {
-	            if (m.getQuantity() < 5) {
-	                System.out.println(m);
-	            }
-	        }
-	    }
+    // ✅ Update medicine quantity
+    public void updateMedicine(int id, int newQuantity) {
+        Medicine med = searchMedicine(id);
+        if (med != null) {
+            med.setQuantity(newQuantity);
+        } else {
+            JOptionPane.showMessageDialog(null, "Medicine not found!");
+        }
+    }
 
-	    // Save data to file
-	    public void saveToFile(String filename) {
-	        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
-	            for (Medicine m : medicines) {
-	                pw.println(m.getId() + "," + m.getName() + "," + m.getQuantity() + "," + m.getPrice());
-	            }
-	            System.out.println("Data saved successfully!");
-	        } catch (IOException e) {
-	            System.out.println("Error saving file: " + e.getMessage());
-	        }
-	    }
-	}
+    // ✅ Delete medicine
+    public void deleteMedicine(int id) {
+        Medicine med = searchMedicine(id);
+        if (med != null) {
+            medicines.remove(med);
+        } else {
+            JOptionPane.showMessageDialog(null, "Medicine not found!");
+        }
+    }
+
+    // ✅ Generate report of low stock items
+    public void generateReport() {
+        StringBuilder report = new StringBuilder("Low Stock Medicines:\n\n");
+        boolean hasLowStock = false;
+
+        for (Medicine med : medicines) {
+            if (med.getQuantity() < 5) { // Example: less than 5 is low
+                hasLowStock = true;
+                report.append(med.getName())
+                      .append(" - Qty: ")
+                      .append(med.getQuantity())
+                      .append("\n");
+            }
+        }
+
+        if (!hasLowStock) {
+            JOptionPane.showMessageDialog(null, "No low-stock medicines!");
+        } else {
+            JOptionPane.showMessageDialog(null, report.toString());
+        }
+    }
+
+//✅ Save data to file
+public void saveToFile(String filename) {
+ try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.FileWriter(filename))) {
+     for (Medicine med : medicines) {
+         writer.println(
+             med.getId() + "," +
+             med.getName() + "," +
+             med.getBatchNumber() + "," +
+             med.getExpiryDate() + "," +
+             med.getQuantity() + "," +
+             med.getUnitPrice()
+         );
+     }
+     javax.swing.JOptionPane.showMessageDialog(null, "Data saved successfully!");
+ } catch (Exception e) {
+     javax.swing.JOptionPane.showMessageDialog(null, "Error saving file: " + e.getMessage());
+ }
+}
+
+//✅ Print all medicines in console view
+public void viewStock() {
+ System.out.println("\n---- Current Stock ----");
+ for (Medicine med : medicines) {
+     System.out.println(med.toString());
+ }
+ System.out.println("-----------------------");
+}
+}
 

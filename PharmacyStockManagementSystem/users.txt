@@ -1,0 +1,4 @@
+admin,admin123,Administrator,add;view;manage_users;report;update;delete
+pharmacist,pharma123,Pharmacist,add;view;update
+manager,manage123,Manager,view;report
+Guest,guest123,NewUser,view

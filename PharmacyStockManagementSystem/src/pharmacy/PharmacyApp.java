@@ -52,7 +52,7 @@ public class PharmacyApp {
 
             // Main menu loop for logged-in user
             while (loggedIn) {
-                System.out.println("\n=== PHARMACY STOCK MANAGEMENT SYSTEM ===");
+                System.out.println("\n=== TOTAL HOUSE CLINIC - PHARMACY STOCK MANAGEMENT SYSTEM ===");
                 System.out.println("1. Add Medicine");
                 System.out.println("2. View Stock");
                 System.out.println("3. Update Medicine");
